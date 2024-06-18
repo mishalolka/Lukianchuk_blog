@@ -1,22 +1,18 @@
 <?php
-
 namespace App\Http\Controllers\Blog\Admin;
-
-// use App\Http\Controllers\Controller;
-// use App\Http\Controllers\Controller;
+//use App\Http\Controllers\Controller;
+//use Illuminate\Http\Request;
 use App\Models\BlogCategory;
-use App\Repositories\BlogCategoryRepository;
 use Illuminate\Support\Str;
-// use Illuminate\Http\Request;
 use App\Http\Requests\BlogCategoryUpdateRequest;
 use App\Http\Requests\BlogCategoryCreateRequest;
+use App\Repositories\BlogCategoryRepository;
 class CategoryController extends BaseController
 {
     /**
      * @var BlogCategoryRepository
      */
     private $blogCategoryRepository;
-
     public function __construct()
     {
         parent::__construct();
@@ -27,35 +23,30 @@ class CategoryController extends BaseController
      */
     public function index()
     {
-        // $paginator = BlogCategory::paginate(5);
+        //
+        //dd(__METHOD__);
         $paginator = $this->blogCategoryRepository->getAllWithPaginate(5);
-
         return view('blog.admin.categories.index', compact('paginator'));
-        // dd(__METHOD__);
     }
-
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
+        //
+        //dd(__METHOD__);
         $item = new BlogCategory();
-        $categoryList = $this->blogCategoryRepository->getForComboBox();  //BlogCategory::all();
-
+        $categoryList = $this->blogCategoryRepository->getForComboBox(); //BlogCategory::all();
         return view('blog.admin.categories.edit', compact('item', 'categoryList'));
-       // dd(__METHOD__);
     }
-
     /**
      * Store a newly created resource in storage.
      */
     public function store(BlogCategoryCreateRequest $request)
     {
+        //
+        //dd(__METHOD__);
         $data = $request->input(); //отримаємо масив даних, які надійшли з форми
-        if (empty($data['slug'])) { //якщо псевдонім порожній
-            $data['slug'] = Str::slug($data['title']); //генеруємо псевдонім
-        }
-
         $item = (new BlogCategory())->create($data); //створюємо об'єкт і додаємо в БД
 
         if ($item) {
@@ -67,17 +58,15 @@ class CategoryController extends BaseController
                 ->withErrors(['msg' => 'Помилка збереження'])
                 ->withInput();
         }
-       // dd(__METHOD__);
     }
-
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-       // dd(__METHOD__);
+        //
+        //dd(__METHOD__);
     }
-
     /**
      * Show the form for editing the specified resource.
      */
@@ -88,27 +77,23 @@ class CategoryController extends BaseController
             abort(404);
         }
         $categoryList = $this->blogCategoryRepository->getForComboBox($item->parent_id);
-     
         return view('blog.admin.categories.edit', compact('item', 'categoryList'));
     }
-
     /**
      * Update the specified resource in storage.
      */
     public function update(BlogCategoryUpdateRequest $request, $id)
     {
-        $item = $this->blogCategoryRepository->getEdit($id);//BlogCategory::find($id);
+        //
+        //dd(__METHOD__);
+        $item = $this->blogCategoryRepository->getEdit($id); //BlogCategory::find($id);
         if (empty($item)) { //якщо ід не знайдено
             return back() //redirect back
-                ->withErrors(['msg' => "Запис id=[{$id}] не знайдено"]) //видати помилку
-                ->withInput(); //повернути дані
+            ->withErrors(['msg' => "Запис id=[{$id}] не знайдено"]) //видати помилку
+            ->withInput(); //повернути дані
         }
 
         $data = $request->all(); //отримаємо масив даних, які надійшли з форми
-        if (empty($data['slug'])) { //якщо псевдонім порожній
-            $data['slug'] = Str::slug($data['title']); //генеруємо псевдонім
-        }
-
         $result = $item->update($data);  //оновлюємо дані об'єкта і зберігаємо в БД
 
         if ($result) {
@@ -120,14 +105,13 @@ class CategoryController extends BaseController
                 ->with(['msg' => 'Помилка збереження'])
                 ->withInput();
         }
-       // dd(__METHOD__);
     }
-
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-       // dd(__METHOD__);
+        //
+        //dd(__METHOD__);
     }
 }
